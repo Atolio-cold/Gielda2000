@@ -149,8 +149,7 @@ if wybrana_opcja == "➕ Dodaj ogłoszenie":
         tytul = st.text_input("Dokładny tytuł książki (np. Oblicza Geografii 3 PR)")
         klasa = st.selectbox("Dla której klasy jest to książka?", ["Klasa 1", "Klasa 2", "Klasa 3", "Klasa 4"])
         cena = st.number_input("Cena (zł)", min_value=0, step=1)
-        kontakt_ig = st.text_input("Twój Instagram (np. @antek_kowalski)")
-
+        kontakt_ig = st.text_input("Twój Instagram (np. @koalicja2000)")
         submit = st.form_submit_button("Dodaj ogłoszenie", type="primary")
 
         if submit:
