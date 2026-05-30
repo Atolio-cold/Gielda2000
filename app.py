@@ -132,6 +132,12 @@ st.markdown("""
         z-index: 1000;
         box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
     }
+    /* --- Poprawa widoczności komunikatów (ostrzeżenia, sukcesy, błędy) --- */
+    div[data-testid="stAlert"] p {
+        color: #111827 !important; /* Ciemny, grafitowy kolor */
+        font-weight: 600 !important; /* Lekkie pogrubienie dla czytelności */
+    }
+    
 </style>
 
 <div class="koalicja-footer">
