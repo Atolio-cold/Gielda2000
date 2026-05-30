@@ -89,7 +89,16 @@ wybrana_opcja = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.image("plakat.jpg", use_container_width=True)
+st.sidebar.image("plakat.jpg", use_container_width=True) # Wyświetlanie plakatu
+
+# --- NOWE: Przycisk Instagrama Koalicji ---
+st.sidebar.markdown("""
+<div style="text-align: center; margin-top: 15px; margin-bottom: 20px;">
+    <a href="https://instagram.com/koalicja2000" target="_blank" class="ig-btn" style="width: 100%; text-align: center; font-size: 16px;">
+        📸 Zaobserwuj @koalicja2000
+    </a>
+</div>
+""", unsafe_allow_html=True)
 
 # 4.5. Przyklejony pasek Koalicji 2000 na dole ekranu
 st.markdown("""
@@ -97,6 +106,14 @@ st.markdown("""
     /* Robimy miejsce na dole strony, żeby pasek nie zasłaniał ostatnich ogłoszeń */
     .block-container {
         padding-bottom: 80px;
+    }
+     /* --- Podświetlenie aktywnego pola (Kursor w środku) --- */
+    div[data-testid="stForm"] input:focus,
+    div[data-testid="stForm"] div[data-baseweb="select"] > div:focus-within {
+        border: 2px solid #1a428a !important; /* Granatowy kolor Koalicji */
+        box-shadow: 0 0 8px rgba(26, 66, 138, 0.4) !important;
+        background-color: #ffffff !important;
+        outline: none !important;
     }
 
     /* Wygląd paska Koalicji 2000 */
@@ -138,11 +155,21 @@ if wybrana_opcja == "➕ Dodaj ogłoszenie":
 
         if submit:
             if imie_nazwisko and tytul and kontakt_ig:
-                # WYSYŁAMY DANE BEZPOŚREDNIO DO GOOGLE
-                arkusz.append_row([imie_nazwisko, tytul, klasa, cena, kontakt_ig])
+                # --- ZABEZPIECZENIE PRZED SPAMEM I PODWÓJNYM KLIKIEM ---
+                # Sprawdzamy, czy w pobranych danych (df) jest już taki sam wpis
+                czy_juz_istnieje = not df[
+                    (df['Imie_Nazwisko'] == imie_nazwisko) &
+                    (df['Tytul'] == tytul) &
+                    (df['Klasa'] == klasa)
+                ].empty
 
-                st.success(f"Sukces! Książka '{tytul}' trafiła do bazy. Możesz przejść do odpowiedniej zakładki.")
-                st.cache_data.clear() # Czyścimy pamięć, żeby apka od razu pobrała nową książkę z bazy
+                if czy_juz_istnieje:
+                    st.warning("Spokojnie! Wygląda na to, że to ogłoszenie zostało już przed chwilą dodane. 😎")
+                else:
+                    # Jeśli ogłoszenia nie ma w bazie, wpuszczamy je do Arkusza
+                    arkusz.append_row([imie_nazwisko, tytul, klasa, cena, kontakt_ig])
+                    st.success(f"Sukces! Książka '{tytul}' trafiła do bazy. Możesz przejść do odpowiedniej zakładki.")
+                    st.cache_data.clear() # Czyścimy pamięć
             else:
                 st.error("Proszę wypełnić wszystkie pola przed wysłaniem!")
 
